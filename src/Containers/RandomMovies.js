@@ -1,11 +1,13 @@
 import CircularIndeterminate from '../Components/CircularProgress'
 import React, { useEffect, useState} from 'react';
+import { Link } from 'react-router-dom';
 import MovieCard from '../Components/MovieCard'
 import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { key } from '../Constants/constants';
+import { query } from '../Helpers/RandomWorlds';
 
 
 //getting random movies for start page| before user put something in searchbar
@@ -13,14 +15,11 @@ export const RandomMovies =  () => {
 
     const[loaded, setLoaded] = useState(false);
     const [movies, setMovies] = useState([]);
-    const key = '177ad4a5b431aa7454ee8710dc22b0dc';
 
     async function getRandomMovies (){
         try {
-            let randomWords = require('random-words');
-            let query = randomWords();
-            let apiData = await axios(`https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${query}`)
-            let results = movies.concat(apiData.data.results)
+            let apiData = await axios(`https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${query}`);
+            let results = movies.concat(apiData.data.results);
             setMovies(results)
             setLoaded(true)
             console.log(movies)
@@ -28,60 +27,50 @@ export const RandomMovies =  () => {
             setLoaded(false)
             alert(error) 
         }
-    }
+    };
 
     useEffect(() => {
         getRandomMovies()
-      }, []);
+    }, []);
 
+    const useStyles = makeStyles(theme => ({
+      root: {
+        flexGrow: 1,
+        margin: "3rem 1.5rem"
+      },
+      paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+      },
+    }));
 
-      const useStyles = makeStyles(theme => ({
-        root: {
-          flexGrow: 1,
-          margin: "3rem 1.5rem"
-        },
-        paper: {
-          padding: theme.spacing(2),
-          textAlign: 'center',
-          color: theme.palette.text.secondary,
-        },
-      }));
-
-      const classes = useStyles();
+    const classes = useStyles();
    
     return (
         <div className={classes.root}>
-            
-   
-               <InfiniteScroll
-                   dataLength={movies.length}
-                   next={getRandomMovies}
-                   hasMore={true}
-                   loader={<h4>Loading...</h4>}
-                   endMessage={
-                     <p style={{ textAlign: "center" }}>
-                       <b>Yay! You have seen it all</b>
-                     </p>
-                   }
-                >
-
+            <InfiniteScroll
+                dataLength={movies.length}
+                next={getRandomMovies}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+                endMessage={
+                  <p style={{ textAlign: "center" }}>
+                    <b>Yay! You have seen it all</b>
+                  </p>}
+            >
                 <Grid container spacing={3}>
-
                     {!loaded && <CircularIndeterminate />}
-
+       
                     {loaded && movies.length !== 0 ? movies.map(el => {
                         return (
-                            <Grid item xs>
-                                <MovieCard data={el}/>
-                            </Grid>)}) : <p>404 not found</p>}
-
+                          <Grid key={el.id} item xs>
+                            <Link to={`/movieinfo/${el.id}`} style={{ textDecoration: 'none' }}>
+                              <MovieCard data={el} />
+                            </Link>
+                          </Grid>)}) : <p>Loading</p>}
                 </Grid>
-            
-                </InfiniteScroll>
-
-          
-            
+             </InfiniteScroll>    
         </div>
     )
-}
-
+};
