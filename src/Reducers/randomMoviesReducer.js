@@ -1,32 +1,50 @@
+import {
+  FETCH_RANDOM_MOVIES,
+  START_LOADING,
+  END_LOADING,
+  ERROR_LOADING,
+} from '../ActionTypes/index';
+
 const initialState = {
-    isLoading: false,
-    isError: false,
-    data: []
-}
+  isLoading: false,
+  loaded: false,
+  isError: false,
+  errorMessage: '',
+  movies: [],
+};
 
 const randomMoviesReducer = (state = initialState, action) => {
-    switch(action.type){
-        case 'GET_RANDOM_MOVIES':
-          return {
-            ...state,
-            data: action.data,
-        };
+  switch (action.type) {
+    case FETCH_RANDOM_MOVIES:
+      return {
+        ...state,
+        movies: action.payload,
+        loaded: true,
+      };
 
-        case 'LOAD_START':
-            return {
-                ...state,
-                isLoading: true
-            };
+    case START_LOADING:
+      return {
+        ...state,
+        isLoading: true,
+      };
 
-        case 'LOAD_END':
-            return {
-                ...state,
-                isLoading: false
-            };
+    case END_LOADING:
+      return {
+        ...state,
+        isLoading: false,
+      };
 
-        default:
-            return state;
-    }
-}
+    case ERROR_LOADING:
+      return {
+        ...state,
+        isLoading: false,
+        loaded: false,
+        errorMessage: action.payload,
+      };
+
+    default:
+      return state;
+  }
+};
 
 export default randomMoviesReducer;

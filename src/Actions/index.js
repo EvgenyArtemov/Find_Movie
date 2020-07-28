@@ -1,27 +1,60 @@
 import axios from 'axios';
-import { GET_RANDOM_MOVIES, START_LOADING, END_LOADING, ERROR_LOADING, apiKey } from '../Constants/constants';
+import { apiKey } from '../Constants/constants';
 import { query } from '../Helpers/RandomWorlds';
+import {
+  FETCH_RANDOM_MOVIES,
+  FETCH_MOVIE_INFO,
+  START_LOADING,
+  END_LOADING,
+  ERROR_LOADING,
+} from '../ActionTypes/index';
 
-export const getActionData = (data) => {
-    return {
-        type: GET_RANDOM_MOVIES,
-        data: data
-    }
+export const fetchRandomMovies = (movies) => {
+  return {
+    type: FETCH_RANDOM_MOVIES,
+    payload: movies,
+  };
 };
 
-export const getRandomMovies = (query) => {
+export const getRandomMovies = () => {
+  return async (dispatch) => {
+    dispatch(loadStart());
 
-    return (dispatch) => {
-
-        dispatch(START_LOADING)
-
-        return axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`)
-        .then(response => {
-            dispatch(getActionData(response.data.results));
-            dispatch(END_LOADING);
-        })
-        .catch(error => {
-            throw(error);
-          })
+    try {
+      const response = await axios(
+        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`
+      );
+      dispatch(fetchRandomMovies(response.data.results));
+      dispatch(loadEnd());
+      console.log(response);
+    } catch (e) {
+      dispatch(ERROR_LOADING(e.message));
     }
-}
+  };
+};
+
+export const fetchMovieInfo = (data) => {
+  return {
+    type: FETCH_MOVIE_INFO,
+    payload: data,
+  };
+};
+
+export const loadStart = () => {
+  return {
+    type: START_LOADING,
+  };
+};
+
+export const loadEnd = () => {
+  return {
+    type: END_LOADING,
+  };
+};
+
+export const errorLoading = (message) => {
+  return {
+    type: ERROR_LOADING,
+    payload: message,
+  };
+};
