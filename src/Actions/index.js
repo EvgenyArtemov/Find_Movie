@@ -1,12 +1,10 @@
 import axios from 'axios';
-
-const key = '177ad4a5b431aa7454ee8710dc22b0dc';
-let randomWords = require('random-words');
-let query = randomWords();
+import { GET_RANDOM_MOVIES, START_LOADING, END_LOADING, ERROR_LOADING, apiKey } from '../Constants/constants';
+import { query } from '../Helpers/RandomWorlds';
 
 export const getActionData = (data) => {
     return {
-        type: 'GET_RANDOM_MOVIES',
+        type: GET_RANDOM_MOVIES,
         data: data
     }
 };
@@ -15,12 +13,12 @@ export const getRandomMovies = (query) => {
 
     return (dispatch) => {
 
-        dispatch('LOAD_START')
+        dispatch(START_LOADING)
 
-        return axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${query}`)
+        return axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`)
         .then(response => {
             dispatch(getActionData(response.data.results));
-            dispatch('LOAD_END');
+            dispatch(END_LOADING);
         })
         .catch(error => {
             throw(error);

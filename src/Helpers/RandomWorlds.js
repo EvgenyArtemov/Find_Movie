@@ -1,2 +1,3 @@
-let randomWords = require('random-words');
-export let query = randomWords();
+import randomwords from 'random-words';
+
+export const query = randomwords();

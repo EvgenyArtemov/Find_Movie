@@ -6,7 +6,7 @@ import axios from 'axios'
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { key } from '../Constants/constants';
+import { apiKey } from '../Constants/constants';
 import { query } from '../Helpers/RandomWorlds';
 
 
@@ -18,7 +18,7 @@ export const RandomMovies =  () => {
 
     async function getRandomMovies (){
         try {
-            let apiData = await axios(`https://api.themoviedb.org/3/search/movie?api_key=${key}&query=${query}`);
+            let apiData = await axios(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`);
             let results = movies.concat(apiData.data.results);
             setMovies(results)
             setLoaded(true)
