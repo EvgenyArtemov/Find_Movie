@@ -1,5 +1,5 @@
 {
-  "extends": ["airbnb", "prettier", "airbnb/hooks"],
+  "extends": ["airbnb", "prettier"],
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": ["error"]

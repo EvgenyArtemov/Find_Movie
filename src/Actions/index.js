@@ -16,21 +16,17 @@ export const fetchRandomMovies = (movies) => {
   };
 };
 
-export const getRandomMovies = () => {
-  return async (dispatch) => {
-    dispatch(loadStart());
-
-    try {
-      const response = await axios(
-        `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`
-      );
-      dispatch(fetchRandomMovies(response.data.results));
-      dispatch(loadEnd());
-      console.log(response);
-    } catch (e) {
-      dispatch(ERROR_LOADING(e.message));
-    }
-  };
+export const getRandomMovies = () => async (dispatch) => {
+  dispatch(loadStart());
+  try {
+    const response = await axios(
+      `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${query}`
+    );
+    dispatch(fetchRandomMovies(response.data.results));
+    dispatch(loadEnd());
+  } catch (e) {
+    dispatch(ERROR_LOADING(e.message));
+  }
 };
 
 export const fetchMovieInfo = (data) => {
