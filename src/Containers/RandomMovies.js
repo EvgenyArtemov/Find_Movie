@@ -41,7 +41,7 @@ const RandomMovies = () => {
         <div className={classes.root}>
           <InfiniteScroll
             dataLength={movies.length}
-            next={dispatch(getRandomMovies())}
+            next={() => dispatch(getRandomMovies())}
             hasMore={true}
             loader={CircularIndeterminate}
             endMessage={

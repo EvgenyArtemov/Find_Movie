@@ -18,7 +18,7 @@ const randomMoviesReducer = (state = initialState, action) => {
     case FETCH_RANDOM_MOVIES:
       return {
         ...state,
-        movies: action.payload,
+        movies: [...state.movies, ...action.payload],
         loaded: true,
       };
 
